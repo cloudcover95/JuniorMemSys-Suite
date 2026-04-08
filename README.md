@@ -1,73 +1,31 @@
-# JuniorMemSys Suite
-
-**High-fidelity Topological Memory Palace SDK**  
-*Bit Drift + TDA Meshes + Sovereign Omni Math Kernel*
-
-Lossless • Edge-first • Apple Silicon M4 native • No ChromaDB • Fully local
-
-![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
-![M4 Optimized](https://img.shields.io/badge/Apple%20Silicon-M4%20Ready-orange)
-
-## Overview
-
-JuniorMemSys Suite is a **production-grade topological memory system** that replaces traditional vector databases with **TDA meshes** and **Bit Drift inference**. It stores raw verbatim content with zero summarization loss and uses advanced mathematical inference (Sovereign Omni Math) for retrieval.
-
-Perfect for long-term AI memory, agent memory layers, local RAG, and edge deployment.
-
-## Quick Start (VSCodium + M4)
-
-cd /
-
-# Activate or create venv
-source .venv/bin/activate   # or: python3.11 -m venv .venv && source .venv/bin/activate
-
-# Install with all features
+JuniorMemSys-Suite v0.4.0Sovereign Topological Memory Palace SDK Apple Silicon Native · MLX-first · TDA + SVD · Bit Drift Inference · MCP ReadyJuniorMemSys-Suite is a production-grade topological memory system that replaces traditional vector databases with TDA meshes and Bit Drift inference. It stores raw verbatim content with zero summarization loss and utilizes a sovereign, edge-optimized mathematical kernel for high-fidelity retrieval.✨ Core FeaturesMLX-First Sovereign Encoder — Native Apple Silicon acceleration (MLX → MPS → Crypto fallback).Topological Memory Palace — TDA + SVD quantization running in a hierarchical Wing → Hall → Room structure.Bit Drift Inference — Replaces high-overhead cosine similarity with mean Feature Disagreement Scores (FDS).Cryptographic Provenance — SHA-256 chain-of-custody and integrity auditing on every stored memory node.Model Context Protocol (MCP) — Native support for Cursor, Claude Desktop, and local LLM agent tool-calling.Enterprise Audit Engine — Built-in benchmarking for throughput (RPS) and retrieval latency verification.TrueDepth / ARKit Bridge — gRPC integration for iPhone/iPad spatial memory and LiDAR mesh ingestion.🚀 Quick Start (M4 Deployment)1. Minimal InstallBashgit clone https://github.com/cloudcover95/JuniorMemSys-Suite.git
+cd JuniorMemSys-Suite
 pip install -e ".[dev,playground,benchmarks]"
+2. Bootstrap the NodeThe omega_boot.sh script handles environment alignment and target service initialization.Bash./omega_boot.sh --ui          # Launch Streamlit / Gradio TDA Sandbox
+./omega_boot.sh --grpc        # Start gRPC receiver for Swift TrueDepth/ARKit
+./omega_boot.sh --web         # Start FastAPI MCP / WebRTC bridge
+🛠 Architecture & Directory TreePlaintextJuniorMemSys-Suite/
+├── 📦 junior_memsys_suite/          # Core installable SDK
+│   ├── core/                        # TDA Engine & Math Kernels
+│   │   ├── palace.py                # MemoryPalace logic (Provenance + Storage)
+│   │   ├── tda_mesh.py              # SVD + Bit Drift Manifolds
+│   │   ├── encoder.py               # MLX-Native Sovereign Encoder
+│   │   └── audit.py                 # Enterprise Integrity & Benchmark Engine
+│   └── pipelines/                   # Data integration layer (DatasetMiner, Chunker)
+├── 🖥️ playground/                   # Streamlit Dashboard & Globe Brain Viz
+├── 🔬 benchmarks/                    # LongMemEval QA & Scaling Tests
+├── 🛠️ scripts/                       # Harvester, Kernel Builders, and Seeders
+└── server.py                        # MCP Protocol / FastAPI Server
+⚖️ Technical BaselineJuniorMemSys utilizes Bit Drift instead of cosine similarity. Tensors are projected via SVD and quantized to a $\pm 1$ binary signature. Retrieval computes the mean Feature Disagreement Score:$$\text{FDS}(q, i) = \frac{1}{d} \sum_{j=1}^{d} \frac{|\sigma_q^j - \sigma_i^j|}{2}$$Storage is gated by the Q-Mark (Sovereign Omni Math Kernel), ensuring only high-signal data etches the mesh:$$\text{Q-Mark} = \text{clip}\!\left(\frac{|z| \cdot \rho}{1 + |\nu|} - |\delta| \cdot \hbar, \; 0, \; 1\right)$$📋 Industry Standard Usage1. Semantic Storage (Provenance Enabled)Pythonfrom junior_memsys_suite.core.palace import MemoryPalace
+palace = MemoryPalace()
 
-# Initialize the memory palace
-junior-memsys init
-
-# Launch the interactive TDA Sandbox
-streamlit run playground/app.py
-Features
-
-Raw verbatim storage (Wings → Halls → Rooms → Drawers)
-Bit Drift inference + Freedman Ladder distances
-Live parameter tuning (etch threshold, variance retention, mesh capacity)
-HF dataset ingestion (llm-math and more)
-Knowledge Graph with temporal triples
-Scalability testing pipelines
-Benchmarks vs traditional vector DBs
-MCP-compatible FastAPI server
-
-Industry Standard Pipelines Included
-
-PipelinePurposeCommand / LocationDataset MiningHF + custom dataset ingestionpipelines/dataset_miner.pyBatch IngestionLarge-scale JSONL/Parquet importpipelines/batch_ingest.pyScaling & BenchmarkingPerformance testing at 10k+ recordsbenchmarks/scaling_test.pyLongMemEval-style QAFull retrieval + generation + scoringbenchmarks/longmem_eval.py (coming)Seeding & Demo DataPre-populate palace + KGBuilt into Streamlit dashboard
-Commands
-Bashjunior-memsys init
-junior-memsys mine --content "your text here"
-junior-memsys search --query "machine learning optimization"
-junior-memsys wake-up          # Start FastAPI MCP server
-Project Structure
-textJuniorMemSys-Suite/
-├── junior_memsys_suite/      # Main package
-├── playground/               # Streamlit TDA Sandbox
-├── pipelines/                # Data ingestion pipelines
-├── benchmarks/               # Scaling & QA benchmarks
-├── tests/                    # Unit tests
-├── .github/workflows/        # CI/CD
-├── Dockerfile + docker-compose
-└── pyproject.toml
-Roadmap
-
-Incremental indexing & file watching
-PDF / document support
-Full LongMemEval QA benchmark suite
-Knowledge Graph visualization in UI
-Ollama / local LLM integration for RAG
-
-
-Made with ❤️ by JuniorCloud LLC
-Optimized for Apple Silicon M4 and edge deployment.
-Star ⭐ if you're building local AI memory systems!
+palace.store(
+    wing="alpha", 
+    hall="directives", 
+    room="root_node",
+    content="Optimize for power-efficient, logic-dense engineering.",
+    z_score=2.5
+)
+2. MCP Tool IntegrationJuniorMemSys serves as a native tool for Claude or Cursor. Connect to the local node:GET http://localhost:8000/mcp/tools3. Server Integrity AuditProve data consistency across the manifold:Bash# Run via CLI
+junior-memsys audit --wing alpha
+🗺 Roadmap (v0.5+)Incremental Indexing: Automated file-watching and delta-etching.Distributed Swarm: Local mesh synchronization across multi-agent clusters (Orange Pi/Linux).Native Swift SDK: Direct ARKit → MemoryPalace integration for spatial computing.BitNet-1.58b Integration: Topological control layers for ternary LLM inference.🛡 License & PhilosophyLicensed under Apache 2.0 / MIT.JuniorMemSys-Suite is built on the belief that AI memory should be local, verifiable, and topology-aware. While frontier cloud models focus on scale, we focus on the mathematical precision of the edge.JuniorCloud LLC • 2026 Made with precision on Apple Silicon.Star the repo if you're building sovereign, local-first AI systems! ⭐
