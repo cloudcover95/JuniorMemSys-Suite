@@ -1,9 +1,9 @@
-# jcllc-mem-sys/jcllc_mem_sys/cli.py
+# junior-memsys-suite/junior_memsys_suite/cli.py
 import typer
 import uvicorn
 from typing import Optional
-from jcllc_mem_sys.core.palace import MemoryPalace
-from jcllc_mem_sys.config import settings
+from junior_memsys_suite.core.palace import MemoryPalace
+from junior_memsys_suite.config import settings
 
 app = typer.Typer(help="JCLLC Mem Sys SDK CLI — Bit Drift + TDA Memory Palace")
 
@@ -32,7 +32,7 @@ def search(query: str = typer.Option(..., "--query"), wing: Optional[str] = None
 @app.command()
 def wake_up(host: str = "0.0.0.0", port: int = 8080):
     typer.echo(f"Booting JCLLC Edge Node on {host}:{port}")
-    uvicorn.run("jcllc_mem_sys.server:app", host=host, port=port)
+    uvicorn.run("junior_memsys_suite.server:app", host=host, port=port)
 
 if __name__ == "__main__":
     app()

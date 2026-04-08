@@ -1,9 +1,9 @@
-# jcllc-mem-sys/pipelines/dataset_miner.py
+# junior-memsys-suite/pipelines/dataset_miner.py
 import json
 import pyarrow as pa
 import pyarrow.parquet as pq
 from pathlib import Path
-from jcllc_mem_sys.core.palace import MemoryPalace
+from junior_memsys_suite.core.palace import MemoryPalace
 
 class DatasetMiner:
     def __init__(self):

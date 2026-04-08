@@ -2,7 +2,7 @@
 import time
 import psutil
 import numpy as np
-from jcllc_mem_sys.core.palace import MemoryPalace
+from junior_memsys_suite.core.palace import MemoryPalace
 
 def run_jcllc_tda_benchmark():
     palace = MemoryPalace()

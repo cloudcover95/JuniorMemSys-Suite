@@ -1,4 +1,4 @@
-# jcllc-mem-sys/pipelines/batch_ingest.py
+# junior-memsys-suite/pipelines/batch_ingest.py
 import os
 from pathlib import Path
 from pipelines.dataset_miner import DatasetMiner

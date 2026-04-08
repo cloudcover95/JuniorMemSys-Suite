@@ -1,11 +1,11 @@
-# jcllc_mem_sys/core/palace.py
+# junior_memsys_suite/core/palace.py
 import json
 import time
 from pathlib import Path
 from typing import Dict, List, Optional
 from pydantic import BaseModel
-from jcllc_mem_sys.config import settings
-from jcllc_mem_sys.core.tda_mesh import TDAMemoryMesh
+from junior_memsys_suite.config import settings
+from junior_memsys_suite.core.tda_mesh import TDAMemoryMesh
 import numpy as np
 
 class MemoryObject(BaseModel):

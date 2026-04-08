@@ -1,7 +1,7 @@
-# jcllc-mem-sys/jcllc_mem_sys/core/tda_mesh.py
+# junior-memsys-suite/junior_memsys_suite/core/tda_mesh.py
 import numpy as np
-from jcllc_mem_sys.core.omni_math import SovereignOmniKernel
-from jcllc_mem_sys.config import settings
+from junior_memsys_suite.core.omni_math import SovereignOmniKernel
+from junior_memsys_suite.config import settings
 import pyarrow as pa
 import pyarrow.parquet as pq
 

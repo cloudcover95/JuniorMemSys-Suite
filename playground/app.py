@@ -1,7 +1,7 @@
-# jcllc-mem-sys/playground/app.py
+# junior-memsys-suite/playground/app.py
 import streamlit as st
-from jcllc_mem_sys.core.palace import MemoryPalace
-from jcllc_mem_sys.core.knowledge_graph import TopologicalKnowledgeGraph
+from junior_memsys_suite.core.palace import MemoryPalace
+from junior_memsys_suite.core.knowledge_graph import TopologicalKnowledgeGraph
 
 st.set_page_config(page_title="JCLLC Mem Sys — TDA Sandbox", layout="wide")
 st.title("JCLLC Topological Memory Palace")

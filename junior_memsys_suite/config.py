@@ -1,4 +1,4 @@
-# jcllc-mem-sys/jcllc_mem_sys/config.py
+# junior-memsys-suite/junior_memsys_suite/config.py
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
 

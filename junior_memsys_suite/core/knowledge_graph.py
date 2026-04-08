@@ -1,8 +1,8 @@
-# jcllc_mem_sys/core/knowledge_graph.py
+# junior_memsys_suite/core/knowledge_graph.py
 import networkx as nx
 from typing import List, Tuple
 from pathlib import Path
-from jcllc_mem_sys.config import settings
+from junior_memsys_suite.config import settings
 import json
 
 class TopologicalKnowledgeGraph:

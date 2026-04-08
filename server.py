@@ -1,9 +1,9 @@
-# jcllc_mem_sys/server.py
+# junior_memsys_suite/server.py
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
-from jcllc_mem_sys.core.palace import MemoryPalace
-from jcllc_mem_sys.core.knowledge_graph import TopologicalKnowledgeGraph
+from junior_memsys_suite.core.palace import MemoryPalace
+from junior_memsys_suite.core.knowledge_graph import TopologicalKnowledgeGraph
 
 app = FastAPI(title="JCLLC Mem Sys API - MCP Protocol")
 palace = MemoryPalace()
