@@ -1,0 +1,47 @@
+# jcllc-mem-sys/pyproject.toml
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jcllc-mem-sys"
+version = "0.2.0"
+description = "JCLLC Mem Sys SDK - Topological Memory Palace via Bit Drift, TDA Meshes & Omni Math"
+authors = [{ name = "Lead Architect, JuniorCloud LLC" }]
+requires-python = ">=3.11"
+dependencies = [
+    "typer>=0.9.0",
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.23.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "networkx>=3.1",
+    "pyarrow>=14.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.3.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+    "streamlit>=1.31.0",
+    "ipykernel>=6.0.0",
+]
+playground = ["streamlit>=1.31.0"]
+
+[project.scripts]
+jcllc-mem-sys = "jcllc_mem_sys.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["jcllc_mem_sys"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
