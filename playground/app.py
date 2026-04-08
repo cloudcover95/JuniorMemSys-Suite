@@ -173,3 +173,40 @@ with tab7:
                 
             except Exception as e:
                 st.error(f"Pipeline Failed: {e}")
+
+# TAB 8: Enterprise Scalability & Telemetry
+with tab8:
+    st.subheader("📈 Enterprise Scalability Telemetry")
+    st.info("Profiles ingestion throughput, strict RAM drift, and Bit Drift search latency up to 50k+ nodes.")
+    
+    colA, colB = st.columns(2)
+    target_nodes = colA.number_input("Target Node Count", min_value=1000, max_value=100000, value=10000, step=1000)
+    step_size = colB.number_input("Batch Step Size", min_value=500, max_value=20000, value=2000, step=500)
+    
+    if st.button("🚀 Execute Manifold Stress Test"):
+        with st.spinner(f"Flooding TDA Mesh with {target_nodes:,} synthetic tensors..."):
+            from benchmarks.scaling_test import EnterpriseScalingHarvester
+            
+            harvester = EnterpriseScalingHarvester()
+            df = harvester.execute_manifold_stress_test(max_nodes=target_nodes, step=step_size)
+            
+            st.success("✅ Stress test complete. Telemetry acquired.")
+            
+            # Telemetry Dashboards
+            st.markdown("### ⚡ System Telemetry")
+            m1, m2, m3 = st.columns(3)
+            m1.metric("Peak Throughput", f"{df['throughput_rps'].max():.1f} RPS")
+            m2.metric("Max Latency (Bit Drift)", f"{df['retrieval_latency_ms'].max():.2f} ms")
+            m3.metric("Total RAM Drift", f"{df['delta_ram_mb'].sum():.2f} MB")
+            
+            st.markdown("### 📉 Performance Curves")
+            c1, c2 = st.columns(2)
+            with c1:
+                st.write("**Throughput (RPS) vs Mesh Size**")
+                st.line_chart(df.set_index("mesh_size")["throughput_rps"])
+            with c2:
+                st.write("**Retrieval Latency (ms) vs Mesh Size**")
+                st.area_chart(df.set_index("mesh_size")["retrieval_latency_ms"])
+                
+            with st.expander("View Raw Telemetry Ledger"):
+                st.dataframe(df, use_container_width=True)
