@@ -144,3 +144,32 @@ with tab6:
     col1.metric(label="[A] JuniorMemSys TDA (Local)", value="~0.84s / 1k nodes", delta="IO-Free")
     col2.metric(label="[B] Legacy MemPalace (Chroma)", value="~2.15s / 1k nodes", delta="SQLite Bottleneck", delta_color="inverse")
     col3.metric(label="[C] LangChain FAISS (Standard)", value="~2.55s / 1k nodes", delta="HNSW Overhead", delta_color="inverse")
+
+# TAB 7: LongMemEval QA Pipeline
+with tab7:
+    st.subheader("End-to-End QA Benchmarking (LongMemEval)")
+    st.info("Tests TDA retrieval accuracy coupled with LLM generation against Gold Standard datasets.")
+    
+    colA, colB = st.columns(2)
+    eval_provider = colA.selectbox("Judge LLM Provider", ["ollama", "openai", "groq"])
+    eval_model = colB.text_input("Model ID", value="mistral" if eval_provider == "ollama" else ("gpt-4o-mini" if eval_provider == "openai" else "llama3-8b-8192"))
+    eval_api = st.text_input("API Key (if required)", type="password", disabled=(eval_provider=="ollama"))
+    
+    sample_size = st.slider("Sample Size", 5, 100, 10)
+    
+    if st.button("🚀 Run QA Benchmark Suite"):
+        from benchmarks.longmem_eval import QABenchmarkPipeline
+        
+        with st.spinner(f"Running evaluation pipeline via {eval_provider.upper()}..."):
+            pipeline = QABenchmarkPipeline(provider=eval_provider, api_key=eval_api, model=eval_model)
+            try:
+                accuracy, results = pipeline.run_eval(sample_size=sample_size, k=3)
+                
+                st.success(f"Benchmark Complete! Accuracy: {accuracy:.1%}")
+                
+                # Display Results in a DataFrame
+                import pandas as pd
+                st.dataframe(pd.DataFrame(results)[["question", "gold", "generated", "score", "retrieval_time_sec"]])
+                
+            except Exception as e:
+                st.error(f"Pipeline Failed: {e}")
