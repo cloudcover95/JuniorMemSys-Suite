@@ -1,9 +1,7 @@
-# junior-memsys-suite/junior_memsys_suite/core/tda_mesh.py
+# junior_memsys_suite/core/tda_mesh.py
 import numpy as np
 from junior_memsys_suite.core.omni_math import SovereignOmniKernel
 from junior_memsys_suite.config import settings
-import pyarrow as pa
-import pyarrow.parquet as pq
 
 class TDAMemoryMesh:
     def __init__(self, node_id: str):

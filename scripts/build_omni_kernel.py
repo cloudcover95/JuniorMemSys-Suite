@@ -1,20 +1,27 @@
-import os, shutil
-from setuptools import setup
+import os, shutil, sys
+from setuptools import setup, Extension
 from Cython.Build import cythonize
 
+# Path definitions
 core_dir = "junior_memsys_suite/core"
-source = f"{core_dir}/omni_math.py"
-target = f"{core_dir}/omni_math.pyx"
+source = os.path.join(core_dir, "omni_math.py")
+target = os.path.join(core_dir, "omni_math.pyx")
 
-# If it's already a .pyx from a previous fail, we're good. 
-# If it's a .py, we rename it for Cython.
+# Ensure source exists as .pyx for Cython
 if os.path.exists(source):
+    if os.path.exists(target): os.remove(target)
     shutil.move(source, target)
+elif not os.path.exists(target):
+    print(f"CRITICAL: No source found at {source} or {target}")
+    sys.exit(1)
 
-if os.path.exists(target):
-    setup(
-        ext_modules=cythonize(target, compiler_directives={'language_level': "3"}),
-        script_args=['build_ext', '--inplace']
-    )
-else:
-    print(f"CRITICAL ERROR: {target} not found for compilation.")
+# Explicitly define the extension to match the package structure
+ext = Extension(
+    name="junior_memsys_suite.core.omni_math",
+    sources=[target]
+)
+
+setup(
+    ext_modules=cythonize([ext], compiler_directives={'language_level': "3"}),
+    script_args=['build_ext', '--inplace']
+)

@@ -1,37 +1,33 @@
-# jcllc-mem-sys/README.md
-# JCLLC Mem Sys SDK — Topological Memory Palace
+<div align="center">
+  <h1>🧬 JuniorMemSys-Suite</h1>
+  <p><b>High-Fidelity Topological Memory Palace for Edge-Native AI</b></p>
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)]([https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT))
+  [![Python >=3.9](https://img.shields.io/badge/Python->=3.9-green.svg)](https://python.org)
+  [![Architecture](https://img.shields.io/badge/Architecture-Apple_Silicon_|_Linux_VM-orange.svg)]()
+  [![Paradigm](https://img.shields.io/badge/Paradigm-Fullstack_Edge_AI-purple.svg)]()
+</div>
 
-**Pure Bit Drift + TDA Meshes + Omni Math**  
-*Our open-source interpretation of MemPalace — no ChromaDB, zero external dependencies, edge-node native.*
+## Overview
+**JuniorMemSys-Suite** replaces legacy scalar vector databases (ChromaDB, FAISS) with **Topological Data Analysis (TDA) Meshes** and **Gamma Signal Inference**. Designed for Apple Silicon (M4/M1) and local network deployments, it acts as a highly efficient, deterministic, and locally sovereign memory engine for LLM workspaces and autonomous agents.
 
-## Architecture (Mermaid)
-```mermaid
-graph TD
-    A[Wings] --> B[Halls]
-    B --> C[Rooms]
-    C --> D[Drawers.jsonl]
-    D --> E[TDA Memory Mesh]
-    E --> F[Bit Drift Inference]
-    F --> G[Sovereign Omni Kernel (SVD)]
-    G --> H[Q-Mark Thresholding]
-    subgraph "Local Edge Node"
-        E
-    end
+Memory context is quantified through **Bit Drift (Feature Disagreement Score)** and mathematical manifold etching, eliminating the overhead of standard similarity embeddings and SQLite WAL locking.
 
-# JCLLC Mem Sys SDK
-
-High-Fidelity Topological Memory Palace powered by the Omni Math Kernel. 
-Engineered for Apple Silicon (M4/M1) and Slate AX / Starlink edge node local deployment.
+### 🛡️ Intellectual Property Notice
+The core mathematical kinematics (`SovereignOmniKernel`) driving the SVD meshing and Q-Mark thresholds are the proprietary intellectual property of **JuniorCloud LLC**. To comply with open-source distribution while maintaining IP integrity, the math core is shipped as a protected C-Extension binary (`.so`). Raw algebraic logic is strictly isolated from this public repository.
 
 ## Architecture
-Replaces legacy embedding systems with SVD Topological Data Analysis (TDA) meshes and Gamma Signal Inference. Memory nodes quantify context through Bit Drift (Feature Disagreement Score) rather than scalar similarity.
 
-Memory state relies on:
-- **L0:** Identity Manifold
-- **L1:** Critical Facts (Quantum Matrix Q-Mark thresholding)
-- **L2:** Room Recall (Topological state mapping)
-- **L3:** Deep Search (Freedman Distance Ladder)
-
-## Installation
-```bash
-pip install jcllc-mem-sys
+```mermaid
+graph TD
+    A[Raw Data / Chat Tensor] --> B[Sovereign Omni Kernel]
+    B --> C{Q-Mark Threshold}
+    C -- "Sub-Threshold (Noise)" --> D[Discard]
+    C -- "High Intensity (Action)" --> E[TDA Quartz Manifold]
+    E --> F[Bit Drift Inference]
+    F --> G[LLM Context Injection]
+    subgraph "Sovereign Edge Node"
+        B
+        C
+        E
+    end

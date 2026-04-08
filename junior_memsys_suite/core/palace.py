@@ -1,6 +1,7 @@
 # junior_memsys_suite/core/palace.py
 import json
 import time
+import hashlib
 from pathlib import Path
 from typing import Dict, List, Optional
 from pydantic import BaseModel
@@ -30,11 +31,29 @@ class MemoryPalace:
             self.meshes[wing] = TDAMemoryMesh(node_id=f"node-{wing}")
         return self.meshes[wing]
 
+    def _deterministic_tensor(self, text: str) -> np.ndarray:
+        """
+        Generates a deterministic pseudo-embedding to bridge the logic gap 
+        until a formal local embedding model is linked to the Harvester.
+        """
+        seed = int(hashlib.md5(text.encode()).hexdigest()[:8], 16)
+        np.random.seed(seed)
+        tensor = np.random.normal(size=(1, settings.embedding_dim))
+        np.random.seed(None) # Reset seed for global state
+        return tensor
+
     def store(self, wing: str, hall: str, room: str, content: str, z_score: float = 1.5):
         mesh = self.get_mesh(wing)
-        synthetic_tensor = np.random.normal(size=(1, settings.embedding_dim))
         
-        success, q_mark = mesh.femtosecond_encode(synthetic_tensor, z_score, delta=0.5, base_vol=0.1)
+        # Replace pure RNG with a deterministic semantic bridge
+        dynamic_tensor = self._deterministic_tensor(content)
+        
+        # Synthetic variance injection based on content length/complexity
+        dynamic_delta = min(len(content) / 1000.0, 1.0) 
+        
+        success, q_mark = mesh.femtosecond_encode(
+            dynamic_tensor, z_score, delta=dynamic_delta, base_vol=0.1
+        )
         
         if success:
             path = self._get_path(wing, hall, room) / "drawers.jsonl"
@@ -53,7 +72,7 @@ class MemoryPalace:
         results = []
         target_wings = [wing] if wing else [w.name for w in self.root.iterdir() if w.is_dir()]
         
-        query_tensor = np.random.normal(size=(1, settings.embedding_dim))
+        query_tensor = self._deterministic_tensor(query)
         
         for w in target_wings:
             mesh = self.get_mesh(w)
