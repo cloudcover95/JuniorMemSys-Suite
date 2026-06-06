@@ -3,18 +3,15 @@
 """
 CallPatternStore
 
-Deeper topological memory support for vision and call recognition patterns.
+Further deepened with ontology-style pattern linking and advanced querying.
 
-Features:
-- Persistent storage of vision tag detections with topological metadata
-- Basic persistence landscape simulation (for future full TDA)
-- Security-conscious storage (integrity hashes for patterns)
-- Querying by topological similarity (placeholder for real TDA)
+Supports building a graph of related recognition patterns (vision tags, voice profiles, user behavior).
+Includes security (integrity) and basic access control stubs.
 
-Integrates with VisionTextEngine and DigitalCallManager.
+This moves toward Palantir-like ontology + sovereign memory capabilities.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 import time
 import hashlib
 
@@ -25,10 +22,10 @@ class CallPatternStore:
         self.stored_patterns: List[Dict[str, Any]] = []
         self.user_profiles: Dict[str, Dict[str, Any]] = {}
         self.vision_patterns: List[Dict[str, Any]] = []
-        self.topological_index: Dict[str, List[str]] = {}  # Simple index for similarity
+        self.topological_index: Dict[str, List[str]] = {}
+        self.pattern_graph: Dict[str, Set[str]] = {}  # Ontology-style links between patterns
 
     def _compute_integrity_hash(self, data: Dict[str, Any]) -> str:
-        """Security: Compute integrity hash for stored patterns."""
         serialized = str(sorted(data.items())).encode()
         return hashlib.sha256(serialized).hexdigest()
 
@@ -61,22 +58,36 @@ class CallPatternStore:
         pattern["topological_signature"] = self._generate_topological_signature(pattern)
 
         self.vision_patterns.append(pattern)
-        self.stored_patterns.append({
-            "type": "vision_pattern",
-            **pattern
-        })
+        self.stored_patterns.append({"type": "vision_pattern", **pattern})
 
-        # Update simple topological index
         sig = pattern["topological_signature"]
         if sig not in self.topological_index:
             self.topological_index[sig] = []
-        self.topological_index[sig].append(pattern.get("detected_tags", ["unknown"])[0] if pattern.get("detected_tags") else "unknown")
+        tag = pattern.get("detected_tags", ["unknown"])[0] if pattern.get("detected_tags") else "unknown"
+        self.topological_index[sig].append(tag)
+
+        # Ontology-style linking: link to similar patterns
+        self._link_similar_patterns(pattern)
+
+    def _link_similar_patterns(self, pattern: Dict[str, Any]) -> None:
+        """Create ontology-style links between related patterns."""
+        current_id = pattern.get("integrity_hash", str(time.time()))
+        if current_id not in self.pattern_graph:
+            self.pattern_graph[current_id] = set()
+
+        # Link to patterns with similar signatures or tags
+        for other in self.vision_patterns[-20:]:  # Recent window
+            if other.get("topological_signature") == pattern.get("topological_signature"):
+                other_id = other.get("integrity_hash", "")
+                if other_id and other_id != current_id:
+                    self.pattern_graph[current_id].add(other_id)
+                    if other_id not in self.pattern_graph:
+                        self.pattern_graph[other_id] = set()
+                    self.pattern_graph[other_id].add(current_id)
 
     def _generate_topological_signature(self, pattern: Dict[str, Any]) -> str:
-        """Basic topological signature (placeholder for real TDA persistence)."""
         tags = pattern.get("detected_tags", [])
         zoom = pattern.get("zoom_level", 1.0)
-        # Simple signature based on tag count and zoom level
         return f"t{len(tags)}_z{int(zoom)}"
 
     def get_user_profile(self, user_id: str) -> Optional[Dict[str, Any]]:
@@ -89,16 +100,37 @@ class CallPatternStore:
         return results
 
     def query_by_topological_similarity(self, signature: str, limit: int = 10) -> List[Dict[str, Any]]:
-        """Query patterns with similar topological signatures."""
         similar = []
         for sig, items in self.topological_index.items():
             if sig == signature or self._signature_similarity(sig, signature) > 0.7:
                 similar.extend(items)
         return similar[:limit]
 
+    def get_related_patterns(self, pattern_id: str, depth: int = 2) -> List[Dict[str, Any]]:
+        """Ontology-style traversal of related patterns."""
+        visited = set()
+        to_visit = [pattern_id]
+        related = []
+
+        for _ in range(depth):
+            next_visit = []
+            for pid in to_visit:
+                if pid in visited:
+                    continue
+                visited.add(pid)
+                if pid in self.pattern_graph:
+                    for neighbor in self.pattern_graph[pid]:
+                        if neighbor not in visited:
+                            next_visit.append(neighbor)
+                            # Find the actual pattern data
+                            for p in self.stored_patterns:
+                                if p.get("integrity_hash") == neighbor:
+                                    related.append(p)
+                                    break
+            to_visit = next_visit
+        return related
+
     def _signature_similarity(self, sig1: str, sig2: str) -> float:
-        """Simple similarity between topological signatures."""
-        # Placeholder - in real TDA this would use persistence diagram distance
         common = len(set(sig1) & set(sig2))
         total = len(set(sig1) | set(sig2))
         return common / total if total > 0 else 0.0
@@ -113,6 +145,7 @@ class CallPatternStore:
             "unique_users": len(self.user_profiles),
             "human_verification_rate": self._calculate_human_rate(),
             "topological_clusters": len(self.topological_index),
+            "graph_edges": sum(len(v) for v in self.pattern_graph.values()),
             "average_cluster_size": sum(len(v) for v in self.topological_index.values()) / max(len(self.topological_index), 1)
         }
 

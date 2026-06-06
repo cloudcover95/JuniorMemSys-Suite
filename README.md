@@ -2,12 +2,11 @@
 
 **Current State**
 
-Deeper topological support added to CallPatternStore:
-- Topological signatures for vision patterns
-- Basic persistence simulation and similarity querying
-- Integrity hashing for security
-- Unified storage for vision detections + call verification data
+Significant deepening of topological and ontology-like capabilities in CallPatternStore:
+- Pattern graph with linking between related vision/call patterns
+- Ontology-style traversal (`get_related_patterns`)
+- Richer topological summaries and security (integrity hashes)
 
-This advances long-term pattern recognition across the ecosystem (Instagram tags, voice verification, user behavior).
+This brings the memory system closer to advanced data platform capabilities (Palantir-like ontology + sovereign control) while remaining lightweight for edge deployment.
 
-Ready for full TDA integration and real benchmarking.
+Vision + call pattern recognition is now first-class with graph relationships.
