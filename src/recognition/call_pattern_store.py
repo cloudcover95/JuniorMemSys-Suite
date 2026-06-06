@@ -3,18 +3,14 @@
 """
 CallPatternStore
 
-Even deeper graph inference capabilities.
+Added pattern prediction and rule-based inference over the graph.
 
-New:
-- Influence propagation (how a pattern affects related ones)
-- Pattern clustering with better grouping
-- Advanced multi-hop querying and inference rules
-- Security: event signing and basic capability-based access
+This enables forward-looking reasoning (e.g. predicting future vision tags or call patterns based on current graph state).
 
-This brings sophisticated reasoning over vision + call recognition patterns.
+Security and biological integration hooks included.
 """
 
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set
 import time
 import hashlib
 
@@ -27,14 +23,13 @@ class CallPatternStore:
         self.vision_patterns: List[Dict[str, Any]] = []
         self.topological_index: Dict[str, List[str]] = {}
         self.pattern_graph: Dict[str, Set[str]] = {}
-        self.event_signatures: Dict[str, str] = {}  # Security: signatures
+        self.event_signatures: Dict[str, str] = {}
 
     def _compute_integrity_hash(self, data: Dict[str, Any]) -> str:
         serialized = str(sorted(data.items())).encode()
         return hashlib.sha256(serialized).hexdigest()
 
     def _sign_event(self, event: Dict[str, Any]) -> str:
-        """Security: Create a signature for the event."""
         return self._compute_integrity_hash(event)
 
     def store_call_event(self, event: Dict[str, Any]) -> None:
@@ -83,7 +78,7 @@ class CallPatternStore:
         if current_id not in self.pattern_graph:
             self.pattern_graph[current_id] = set()
 
-        for other in self.vision_patterns[-40:]:
+        for other in self.vision_patterns[-50:]:
             if other.get("topological_signature") == pattern.get("topological_signature"):
                 other_id = other.get("integrity_hash", "")
                 if other_id and other_id != current_id:
@@ -167,7 +162,6 @@ class CallPatternStore:
         return related
 
     def propagate_influence(self, start_id: str, influence_factor: float = 0.8, max_depth: int = 3) -> Dict[str, float]:
-        """Deeper graph inference: propagate influence from a pattern to related ones."""
         influence = {start_id: 1.0}
         current_influence = {start_id: 1.0}
 
@@ -185,7 +179,6 @@ class CallPatternStore:
         return influence
 
     def cluster_patterns(self) -> Dict[str, List[str]]:
-        """Improved clustering based on graph connectivity and signatures."""
         clusters = {}
         visited = set()
         cluster_id = 0
@@ -207,6 +200,26 @@ class CallPatternStore:
             clusters[f"cluster_{cluster_id}"] = cluster
             cluster_id += 1
         return clusters
+
+    def predict_future_patterns(self, current_state: Dict[str, Any], steps: int = 3) -> List[Dict[str, Any]]:
+        """Deeper inference: predict likely future patterns based on current graph state."""
+        predictions = []
+        current_tags = current_state.get("detected_tags", [])
+
+        for _ in range(steps):
+            related = self.infer_related_concepts(current_tags, max_results=5)
+            if not related:
+                break
+            # Simple prediction: most common tags in related patterns
+            tag_counts = {}
+            for p in related:
+                for t in p.get("detected_tags", []):
+                    tag_counts[t] = tag_counts.get(t, 0) + 1
+            if tag_counts:
+                next_tag = max(tag_counts, key=tag_counts.get)
+                predictions.append({"predicted_tag": next_tag, "confidence": tag_counts[next_tag] / len(related)})
+                current_tags = [next_tag]
+        return predictions
 
     def _signature_similarity(self, sig1: str, sig2: str) -> float:
         common = len(set(sig1) & set(sig2))
