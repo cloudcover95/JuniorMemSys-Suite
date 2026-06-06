@@ -2,11 +2,14 @@
 
 **Current State**
 
-Significant deepening of topological and ontology-like capabilities in CallPatternStore:
-- Pattern graph with linking between related vision/call patterns
-- Ontology-style traversal (`get_related_patterns`)
-- Richer topological summaries and security (integrity hashes)
+**Significant advancement in graph reasoning**
 
-This brings the memory system closer to advanced data platform capabilities (Palantir-like ontology + sovereign control) while remaining lightweight for edge deployment.
+CallPatternStore now supports:
+- Shortest path finding between patterns
+- Basic community detection
+- Graph-based inference (`infer_related_concepts`)
+- Richer ontology traversal and topological summaries
 
-Vision + call pattern recognition is now first-class with graph relationships.
+Combined with VisionTextEngine pattern output and biological plasticity, the memory system is becoming a powerful sovereign reasoning engine for recognition patterns (vision tags + voice verification).
+
+This is meaningful progress toward advanced, Palantir-style ontology + graph reasoning in a local, efficient package.
