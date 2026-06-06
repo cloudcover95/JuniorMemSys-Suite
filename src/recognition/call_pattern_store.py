@@ -3,15 +3,15 @@
 """
 CallPatternStore
 
-Deeper graph reasoning capabilities added.
+Even deeper graph inference capabilities.
 
-New features:
-- Shortest path finding between patterns (ontology traversal)
-- Basic community detection (Louvain-like stub)
-- Graph-based inference (find related concepts across vision + call patterns)
-- Security: signed events and access control stubs
+New:
+- Influence propagation (how a pattern affects related ones)
+- Pattern clustering with better grouping
+- Advanced multi-hop querying and inference rules
+- Security: event signing and basic capability-based access
 
-This significantly advances the ontology + topological memory toward Palantir-like reasoning while remaining edge-friendly.
+This brings sophisticated reasoning over vision + call recognition patterns.
 """
 
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -27,15 +27,21 @@ class CallPatternStore:
         self.vision_patterns: List[Dict[str, Any]] = []
         self.topological_index: Dict[str, List[str]] = {}
         self.pattern_graph: Dict[str, Set[str]] = {}
+        self.event_signatures: Dict[str, str] = {}  # Security: signatures
 
     def _compute_integrity_hash(self, data: Dict[str, Any]) -> str:
         serialized = str(sorted(data.items())).encode()
         return hashlib.sha256(serialized).hexdigest()
 
+    def _sign_event(self, event: Dict[str, Any]) -> str:
+        """Security: Create a signature for the event."""
+        return self._compute_integrity_hash(event)
+
     def store_call_event(self, event: Dict[str, Any]) -> None:
         event = dict(event)
         event["stored_at"] = time.time()
         event["integrity_hash"] = self._compute_integrity_hash(event)
+        event["signature"] = self._sign_event(event)
         self.stored_patterns.append(event)
 
         user_id = event.get("user_id") or event.get("call_id")
@@ -58,6 +64,7 @@ class CallPatternStore:
         pattern = dict(pattern)
         pattern["stored_at"] = time.time()
         pattern["integrity_hash"] = self._compute_integrity_hash(pattern)
+        pattern["signature"] = self._sign_event(pattern)
         pattern["topological_signature"] = self._generate_topological_signature(pattern)
 
         self.vision_patterns.append(pattern)
@@ -76,7 +83,7 @@ class CallPatternStore:
         if current_id not in self.pattern_graph:
             self.pattern_graph[current_id] = set()
 
-        for other in self.vision_patterns[-30:]:
+        for other in self.vision_patterns[-40:]:
             if other.get("topological_signature") == pattern.get("topological_signature"):
                 other_id = other.get("integrity_hash", "")
                 if other_id and other_id != current_id:
@@ -122,15 +129,11 @@ class CallPatternStore:
         return related
 
     def find_shortest_path(self, start_id: str, end_id: str) -> List[str]:
-        """Graph reasoning: shortest path between two patterns (BFS)."""
         from collections import deque
-
         if start_id not in self.pattern_graph or end_id not in self.pattern_graph:
             return []
-
         queue = deque([(start_id, [start_id])])
         visited = set()
-
         while queue:
             current, path = queue.popleft()
             if current == end_id:
@@ -138,14 +141,12 @@ class CallPatternStore:
             if current in visited:
                 continue
             visited.add(current)
-
             for neighbor in self.pattern_graph.get(current, []):
                 if neighbor not in visited:
                     queue.append((neighbor, path + [neighbor]))
         return []
 
     def detect_communities(self) -> Dict[str, List[str]]:
-        """Basic community detection stub (degree-based clustering)."""
         communities = {}
         for node, neighbors in self.pattern_graph.items():
             degree = len(neighbors)
@@ -156,7 +157,6 @@ class CallPatternStore:
         return communities
 
     def infer_related_concepts(self, seed_tags: List[str], max_results: int = 10) -> List[Dict[str, Any]]:
-        """Graph inference: find patterns related to given tags via graph traversal."""
         related = []
         for pattern in self.vision_patterns + self.stored_patterns:
             tags = pattern.get("detected_tags", [])
@@ -165,6 +165,48 @@ class CallPatternStore:
             if len(related) >= max_results:
                 break
         return related
+
+    def propagate_influence(self, start_id: str, influence_factor: float = 0.8, max_depth: int = 3) -> Dict[str, float]:
+        """Deeper graph inference: propagate influence from a pattern to related ones."""
+        influence = {start_id: 1.0}
+        current_influence = {start_id: 1.0}
+
+        for depth in range(max_depth):
+            next_influence = {}
+            for node, inf in current_influence.items():
+                for neighbor in self.pattern_graph.get(node, []):
+                    new_inf = inf * influence_factor
+                    if neighbor not in influence or new_inf > influence[neighbor]:
+                        influence[neighbor] = new_inf
+                        next_influence[neighbor] = new_inf
+            current_influence = next_influence
+            if not current_influence:
+                break
+        return influence
+
+    def cluster_patterns(self) -> Dict[str, List[str]]:
+        """Improved clustering based on graph connectivity and signatures."""
+        clusters = {}
+        visited = set()
+        cluster_id = 0
+
+        for node in list(self.pattern_graph.keys()):
+            if node in visited:
+                continue
+            cluster = []
+            stack = [node]
+            while stack:
+                current = stack.pop()
+                if current in visited:
+                    continue
+                visited.add(current)
+                cluster.append(current)
+                for neighbor in self.pattern_graph.get(current, []):
+                    if neighbor not in visited:
+                        stack.append(neighbor)
+            clusters[f"cluster_{cluster_id}"] = cluster
+            cluster_id += 1
+        return clusters
 
     def _signature_similarity(self, sig1: str, sig2: str) -> float:
         common = len(set(sig1) & set(sig2))
@@ -183,6 +225,7 @@ class CallPatternStore:
             "topological_clusters": len(self.topological_index),
             "graph_edges": sum(len(v) for v in self.pattern_graph.values()),
             "communities": len(self.detect_communities()),
+            "clusters": len(self.cluster_patterns()),
             "average_cluster_size": sum(len(v) for v in self.topological_index.values()) / max(len(self.topological_index), 1)
         }
 

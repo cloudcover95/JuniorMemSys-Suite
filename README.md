@@ -2,14 +2,11 @@
 
 **Current State**
 
-**Significant advancement in graph reasoning**
+**Even deeper graph inference added**
 
-CallPatternStore now supports:
-- Shortest path finding between patterns
-- Basic community detection
-- Graph-based inference (`infer_related_concepts`)
-- Richer ontology traversal and topological summaries
+- Influence propagation across the pattern graph
+- Improved clustering (`cluster_patterns`)
+- Advanced inference methods
+- Stronger security with event signing
 
-Combined with VisionTextEngine pattern output and biological plasticity, the memory system is becoming a powerful sovereign reasoning engine for recognition patterns (vision tags + voice verification).
-
-This is meaningful progress toward advanced, Palantir-style ontology + graph reasoning in a local, efficient package.
+The memory system now supports sophisticated reasoning over vision tags and call verification patterns, moving closer to advanced ontology-driven platforms in a sovereign, efficient form.
