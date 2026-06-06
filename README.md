@@ -2,12 +2,10 @@
 
 **Current State**
 
-Started actual integration with the calling system from JuniorHome.
+Enhanced CallPatternStore with topological summary support and dedicated vision pattern storage.
 
-Added `src/recognition/call_pattern_store.py` — a dedicated store for recognition patterns derived from DigitalCallManager events.
+Now fully integrated with DigitalCallManager and VisionTextEngine from JuniorHome.
 
-This enables long-term memory of voice verification patterns, user profiles from repeated calls, and topological analysis of calling behavior.
+Vision detections (Instagram story tags, etc.) and call verification data are stored together for long-term pattern recognition and topological analysis.
 
-The store is designed to be used via the MemoryBackend in JuniorHome's DigitalCallManager and SHEEPMemory.
-
-Future work: Full TDA/persistence integration for complex pattern recognition across call data.
+This is a key step in building the unified sovereign memory architecture across the ecosystem.

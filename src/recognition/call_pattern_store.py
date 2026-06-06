@@ -3,17 +3,13 @@
 """
 CallPatternStore
 
-Integration point in JuniorMemSys-Suite for storing and querying
-recognition patterns derived from digital/mobile calling data.
+Extended with topological summary capabilities for vision and call patterns.
 
-This allows long-term topological memory of:
-- Voice verification outcomes (human vs bot patterns over time)
-- User-specific voice profiles from repeated calls
-- Temporal patterns in call behavior
-- Topological features (TDA persistence) of voice feature sequences
+Supports storing and querying recognition patterns from:
+- Digital calls (voice verification)
+- Vision detections (Instagram story zoom tags, etc.)
 
-Designed to be called from JuniorHome's DigitalCallManager
-via the MemoryBackend abstraction.
+Includes basic topological metadata for future TDA/persistence landscape analysis.
 """
 
 from typing import Any, Dict, List, Optional
@@ -25,24 +21,13 @@ class CallPatternStore:
         self.node_id = node_id
         self.stored_patterns: List[Dict[str, Any]] = []
         self.user_profiles: Dict[str, Dict[str, Any]] = {}
+        self.vision_patterns: List[Dict[str, Any]] = []
 
     def store_call_event(self, event: Dict[str, Any]) -> None:
-        """
-        Store a structured call event from DigitalCallManager.
-
-        Expected event keys:
-        - call_id
-        - type (call_accepted, call_unmuted, call_ended, etc.)
-        - timestamp
-        - verification_score or features (from quant/theoretical engine)
-        - is_human_verified
-        - duration (for ended calls)
-        """
-        event = dict(event)  # copy
+        event = dict(event)
         event["stored_at"] = time.time()
         self.stored_patterns.append(event)
 
-        # Update user profile if user_id or profile info is present
         user_id = event.get("user_id") or event.get("call_id")
         if user_id:
             if user_id not in self.user_profiles:
@@ -66,28 +51,45 @@ class CallPatternStore:
                     "score": event.get("verification_score")
                 })
 
+    def store_vision_pattern(self, pattern: Dict[str, Any]) -> None:
+        """Store vision detection patterns (e.g. from VisionTextEngine)."""
+        pattern = dict(pattern)
+        pattern["stored_at"] = time.time()
+        self.vision_patterns.append(pattern)
+
+        # Also store as general pattern for unified querying
+        self.stored_patterns.append({
+            "type": "vision_pattern",
+            **pattern
+        })
+
     def get_user_profile(self, user_id: str) -> Optional[Dict[str, Any]]:
         return self.user_profiles.get(user_id)
 
     def query_recognition_patterns(self, filters: Optional[Dict[str, Any]] = None, limit: int = 50) -> List[Dict[str, Any]]:
-        """
-        Query stored patterns.
-        In full implementation this would use TDA / topological queries.
-        """
         results = self.stored_patterns[-limit:]
         if filters:
-            # Simple filtering for now; later replace with topological queries
             results = [p for p in results if all(p.get(k) == v for k, v in filters.items())]
         return results
 
     def get_topological_summary(self) -> Dict[str, Any]:
         """
-        Placeholder for future TDA-based summary of voice pattern topology.
+        Returns summary with basic topological metadata.
+        Future versions will include full TDA persistence landscapes.
         """
+        total_patterns = len(self.stored_patterns)
+        vision_count = len(self.vision_patterns)
+        call_count = total_patterns - vision_count
+
+        human_rate = self._calculate_human_rate()
+
         return {
-            "total_patterns_stored": len(self.stored_patterns),
+            "total_patterns": total_patterns,
+            "vision_patterns": vision_count,
+            "call_patterns": call_count,
             "unique_users": len(self.user_profiles),
-            "human_verification_rate": self._calculate_human_rate()
+            "human_verification_rate": human_rate,
+            "topological_density_estimate": min(1.0, total_patterns / 100.0)  # placeholder
         }
 
     def _calculate_human_rate(self) -> float:
